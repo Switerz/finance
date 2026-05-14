@@ -11,7 +11,8 @@ export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${origin}/callback?next=/onboarding`
+      redirectTo: `${origin}/callback?next=/onboarding`,
+      queryParams: { prompt: "select_account" }
     }
   });
 

@@ -1,36 +1,14 @@
 "use client";
 
 import * as React from "react";
-import {
-  Bell,
-  Check,
-  Copy,
-  Download,
-  Link2,
-  ShieldAlert,
-  UserPlus,
-  Users,
-  WalletCards,
-  X
-} from "lucide-react";
+import { Bell, Download, ShieldAlert, WalletCards } from "lucide-react";
 import { toast } from "sonner";
 import {
-  cancelInvitation,
-  createInvitation,
   deleteCurrentWorkspace,
-  removeWorkspaceMember,
   updateProfile,
-  updateWorkspace,
-  updateWorkspaceMemberRole
+  updateWorkspace
 } from "@/lib/actions/settings";
-import type {
-  ActionResult,
-  Invitation,
-  InvitationRole,
-  SettingsOverview,
-  WorkspaceMember,
-  WorkspaceRole
-} from "@/types/finance";
+import type { ActionResult, SettingsOverview, WorkspaceRole } from "@/types/finance";
 import { NotificationSettings } from "@/components/settings/notification-settings";
 import { ConfirmDialog } from "@/components/layout/confirm-dialog";
 import { PageHeader } from "@/components/layout/page-header";
@@ -45,21 +23,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from "@/components/ui/table";
 
 type SettingsClientProps = {
   overview: SettingsOverview;
@@ -71,8 +34,6 @@ const roleLabels: Record<WorkspaceRole, string> = {
   member: "Membro",
   viewer: "Viewer"
 };
-
-const editableRoles = ["admin", "member", "viewer"] as const;
 
 function showResult(result: ActionResult, fallbackSuccess: string) {
   if (!result.ok) {
@@ -94,11 +55,6 @@ export function SettingsClient({ overview }: SettingsClientProps) {
     name: overview.workspace?.name ?? "",
     currency: overview.workspace?.currency ?? "BRL"
   });
-  const [newInvite, setNewInvite] = React.useState({
-    email: "",
-    role: "viewer" as InvitationRole
-  });
-  const [copiedToken, setCopiedToken] = React.useState<string | null>(null);
   const [confirmationName, setConfirmationName] = React.useState("");
   const canAdmin = overview.canAdmin;
   const canDeleteWorkspace = overview.canDeleteWorkspace;
@@ -124,49 +80,11 @@ export function SettingsClient({ overview }: SettingsClientProps) {
     });
   }
 
-  function submitInvite(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    startTransition(async () => {
-      const result = await createInvitation(newInvite);
-      if (!result.ok) {
-        toast.error(result.message ?? "Não foi possível criar o convite.");
-        return;
-      }
-      toast.success("Convite criado. Copie o link abaixo.");
-      setNewInvite({ email: "", role: "viewer" });
-    });
-  }
-
-  function copyInviteLink(token: string) {
-    const url = `${window.location.origin}/invite/${token}`;
-    navigator.clipboard.writeText(url).then(() => {
-      setCopiedToken(token);
-      setTimeout(() => setCopiedToken(null), 2000);
-    });
-  }
-
-  function handleCancelInvitation(invitationId: string) {
-    startTransition(async () => {
-      await cancelInvitation(invitationId).then((result) =>
-        showResult(result, "Convite cancelado.")
-      );
-    });
-  }
-
-  function changeMemberRole(member: WorkspaceMember, role: string) {
-    startTransition(async () => {
-      await updateWorkspaceMemberRole(
-        member.id,
-        role as "admin" | "member" | "viewer"
-      ).then((result) => showResult(result, "Papel atualizado."));
-    });
-  }
-
   return (
     <div className="space-y-6">
       <PageHeader
         title="Configurações"
-        description="Perfil, workspace, membros, exportação e ações administrativas."
+        description="Perfil, workspace, notificações e ações administrativas."
       />
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
@@ -174,7 +92,7 @@ export function SettingsClient({ overview }: SettingsClientProps) {
           <CardHeader>
             <CardTitle>Perfil</CardTitle>
             <CardDescription>
-              Dados exibidos para membros que compartilham workspace com você.
+              Nome e avatar associados à sua conta.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -223,7 +141,7 @@ export function SettingsClient({ overview }: SettingsClientProps) {
           <CardHeader>
             <CardTitle>Workspace</CardTitle>
             <CardDescription>
-              Admins podem alterar nome e moeda padrão do workspace atual.
+              Nome e moeda padrão do seu espaço financeiro.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -272,212 +190,6 @@ export function SettingsClient({ overview }: SettingsClientProps) {
           </CardContent>
         </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
-            Membros
-          </CardTitle>
-          <CardDescription>
-            Gerencie os membros do workspace e envie convites por link.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-5">
-          {/* Invite form */}
-          <form
-            onSubmit={submitInvite}
-            className="grid gap-3 md:grid-cols-[minmax(0,1fr)_180px_auto]"
-          >
-            <div className="space-y-2">
-              <Label htmlFor="inviteEmail">Convidar por email</Label>
-              <Input
-                id="inviteEmail"
-                type="email"
-                value={newInvite.email}
-                onChange={(event) =>
-                  setNewInvite((current) => ({
-                    ...current,
-                    email: event.target.value
-                  }))
-                }
-                placeholder="pessoa@email.com"
-                disabled={!canAdmin || isPending}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Papel</Label>
-              <Select
-                value={newInvite.role}
-                onValueChange={(value) =>
-                  setNewInvite((current) => ({
-                    ...current,
-                    role: value as InvitationRole
-                  }))
-                }
-                disabled={!canAdmin || isPending}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {editableRoles.map((role) => (
-                    <SelectItem key={role} value={role}>
-                      {roleLabels[role]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-end">
-              <Button type="submit" disabled={!canAdmin || isPending}>
-                <UserPlus className="mr-2 h-4 w-4" />
-                Convidar
-              </Button>
-            </div>
-          </form>
-
-          {/* Pending invitations */}
-          {overview.invitations.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-sm font-medium flex items-center gap-1.5">
-                <Link2 className="h-4 w-4" />
-                Convites pendentes
-              </p>
-              <div className="overflow-auto rounded-md border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Papel</TableHead>
-                      <TableHead>Expira em</TableHead>
-                      <TableHead className="text-right">Ações</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {overview.invitations.map((invitation: Invitation) => (
-                      <TableRow key={invitation.id}>
-                        <TableCell className="font-medium">
-                          {invitation.invited_email}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">
-                            {roleLabels[invitation.role]}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-sm text-muted-foreground">
-                          {new Date(invitation.expires_at).toLocaleDateString("pt-BR")}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="outline"
-                              onClick={() => copyInviteLink(invitation.token)}
-                            >
-                              {copiedToken === invitation.token ? (
-                                <Check className="h-3.5 w-3.5" />
-                              ) : (
-                                <Copy className="h-3.5 w-3.5" />
-                              )}
-                              <span className="ml-1.5">
-                                {copiedToken === invitation.token ? "Copiado" : "Copiar link"}
-                              </span>
-                            </Button>
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="ghost"
-                              disabled={!canAdmin || isPending}
-                              onClick={() => handleCancelInvitation(invitation.id)}
-                            >
-                              <X className="h-3.5 w-3.5" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          )}
-
-          {/* Member list */}
-          <div className="overflow-auto rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Membro</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Papel</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {overview.members.map((member) => {
-                  const isOwner = member.role === "owner";
-                  const canEditMember = canAdmin && !isOwner;
-
-                  return (
-                    <TableRow key={member.id}>
-                      <TableCell className="font-medium">
-                        {member.profile?.full_name ?? "Sem nome"}
-                      </TableCell>
-                      <TableCell>{member.profile?.email ?? "-"}</TableCell>
-                      <TableCell>
-                        {canEditMember ? (
-                          <Select
-                            value={member.role}
-                            onValueChange={(role) => changeMemberRole(member, role)}
-                            disabled={isPending}
-                          >
-                            <SelectTrigger className="w-36">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {editableRoles.map((role) => (
-                                <SelectItem key={role} value={role}>
-                                  {roleLabels[role]}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        ) : (
-                          <Badge variant="outline">{roleLabels[member.role]}</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <ConfirmDialog
-                          title="Remover membro?"
-                          description="O usuário perderá acesso a este workspace."
-                          confirmLabel="Remover"
-                          variant="destructive"
-                          onConfirm={async () => {
-                            const result = await removeWorkspaceMember(member.id);
-                            showResult(result, "Membro removido.");
-                          }}
-                          trigger={
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="outline"
-                              disabled={!canEditMember || isPending}
-                            >
-                              Remover
-                            </Button>
-                          }
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader>
