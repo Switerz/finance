@@ -1,6 +1,6 @@
 "use server";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -27,6 +27,8 @@ export async function signInWithGoogle() {
 }
 
 export async function signOut() {
+  const cookieStore = await cookies();
+  cookieStore.delete("workspace_id");
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/login");

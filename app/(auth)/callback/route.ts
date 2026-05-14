@@ -1,5 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import {
+  getWorkspaceMemberAllowlist,
+  isEmailAllowlisted
+} from "@/lib/settings/allowlist";
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
@@ -15,9 +19,25 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      const allowlist = getWorkspaceMemberAllowlist();
+      if (allowlist.length > 0) {
+        const {
+          data: { user }
+        } = await supabase.auth.getUser();
+
+        if (!user?.email || !isEmailAllowlisted(user.email)) {
+          await supabase.auth.signOut();
+          return NextResponse.redirect(
+            new URL("/login?error=not_allowed", request.url)
+          );
+        }
+      }
+
       return NextResponse.redirect(new URL(next, request.url));
     }
   }
 
-  return NextResponse.redirect(new URL("/login?error=auth_callback", request.url));
+  return NextResponse.redirect(
+    new URL("/login?error=auth_callback", request.url)
+  );
 }

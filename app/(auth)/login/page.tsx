@@ -35,7 +35,9 @@ export default async function LoginPage({
         <CardContent className="space-y-4">
           {error ? (
             <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              Não foi possível concluir o login. Tente novamente.
+              {error === "not_allowed"
+                ? "Este email não tem acesso ao Finance Planner."
+                : "Não foi possível concluir o login. Tente novamente."}
             </div>
           ) : null}
           <form action={signInWithGoogle}>

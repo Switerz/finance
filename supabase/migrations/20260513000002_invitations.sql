@@ -7,7 +7,7 @@ create table if not exists public.invitations (
   workspace_id  uuid        not null references public.workspaces(id) on delete cascade,
   invited_email text        not null,
   invited_by    uuid        not null references public.profiles(id) on delete cascade,
-  token         text        not null unique default encode(gen_random_bytes(32), 'hex'),
+  token         text        not null unique default encode(extensions.gen_random_bytes(32), 'hex'),
   role          text        not null default 'member'
                             check (role in ('admin', 'member', 'viewer')),
   status        text        not null default 'pending'
