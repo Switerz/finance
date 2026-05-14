@@ -6,12 +6,18 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function signInWithGoogle() {
   const supabase = await createClient();
-  const origin = (await headers()).get("origin") ?? "http://localhost:3000";
+
+  // NEXT_PUBLIC_SITE_URL is set in production (Vercel); falls back to
+  // the request origin for local dev.
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+    (await headers()).get("origin") ||
+    "http://localhost:3000";
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${origin}/callback?next=/onboarding`,
+      redirectTo: `${siteUrl}/callback?next=/onboarding`,
       queryParams: { prompt: "select_account" }
     }
   });
