@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Finance Planner — Guia do Utilizador</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #078669;
+    --green-light: #e8f5f1;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --bg-section: #f9fafb;
+    --accent: #0f766e;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text);
+    background: #fff;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px;
+    background: linear-gradient(135deg, #0a4a3d 0%, #078669 60%, #0e9e7e 100%);
+    color: #fff;
+    page-break-after: always;
+  }
+
+  .cover-logo {
+    width: 56px; height: 56px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 40px;
+    font-size: 28px;
+  }
+
+  .cover h1 {
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .cover .subtitle {
+    font-size: 20px;
+    opacity: 0.8;
+    margin-bottom: 60px;
+    font-weight: 400;
+  }
+
+  .cover .meta {
+    font-size: 13px;
+    opacity: 0.6;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 24px;
+    width: 100%;
+  }
+
+  /* ── Layout ── */
+  .page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 80px;
+  }
+
+  @media print {
+    .page { padding: 40px 60px; }
+    .cover { padding: 60px; }
+    h2 { page-break-before: always; }
+    h2:first-of-type { page-break-before: avoid; }
+    .no-break { page-break-inside: avoid; }
+  }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--bg-section);
+    border-radius: 12px;
+    padding: 32px 40px;
+    margin-bottom: 48px;
+    page-break-after: always;
+  }
+
+  .toc h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: var(--green);
+    page-break-before: avoid;
+  }
+
+  .toc ol { padding-left: 20px; }
+  .toc li { padding: 4px 0; font-size: 13.5px; }
+  .toc li a { color: var(--text); text-decoration: none; }
+  .toc li a:hover { color: var(--green); }
+  .toc .toc-section { font-weight: 600; margin-top: 8px; }
+  .toc .toc-sub { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: 8px; }
+
+  /* ── Headings ── */
+  h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    margin-top: 8px;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  .section-badge {
+    display: inline-block;
+    background: var(--green-light);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+  }
+
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 6px;
+    color: var(--accent);
+  }
+
+  p { margin-bottom: 12px; color: var(--text); }
+
+  .lead {
+    font-size: 16px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  /* ── Lists ── */
+  ul, ol { padding-left: 22px; margin-bottom: 14px; }
+  li { margin-bottom: 5px; }
+
+  /* ── Cards/Callouts ── */
+  .callout {
+    border-left: 4px solid var(--green);
+    background: var(--green-light);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 20px 0;
+    font-size: 13.5px;
+  }
+
+  .callout strong { color: var(--green); }
+
+  .tip {
+    border-left: 4px solid #2563eb;
+    background: #eff6ff;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 20px 0;
+    font-size: 13.5px;
+  }
+
+  .tip strong { color: #2563eb; }
+
+  .warn {
+    border-left: 4px solid #d97706;
+    background: #fffbeb;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 20px 0;
+    font-size: 13.5px;
+  }
+
+  .warn strong { color: #d97706; }
+
+  /* ── Feature grid ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 20px 0;
+  }
+
+  .feature-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    background: var(--bg-section);
+  }
+
+  .feature-card .icon { font-size: 20px; margin-bottom: 8px; }
+  .feature-card strong { display: block; margin-bottom: 4px; font-size: 13.5px; }
+  .feature-card p { font-size: 12.5px; color: var(--muted); margin: 0; }
+
+  /* ── Steps ── */
+  .steps { counter-reset: step; margin: 20px 0; }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    counter-increment: step;
+    min-width: 28px; height: 28px;
+    background: var(--green);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .step-num::after { content: counter(step); }
+
+  .step-body strong { display: block; margin-bottom: 3px; font-size: 14px; }
+  .step-body p { font-size: 13px; color: var(--muted); margin: 0; }
+
+  /* ── Table ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+
+  th {
+    background: var(--bg-section);
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    vertical-align: middle;
+  }
+
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-blue { background: #eff6ff; color: #2563eb; }
+  .badge-orange { background: #fff7ed; color: #c2410c; }
+  .badge-purple { background: #f5f3ff; color: #7c3aed; }
+
+  /* ── Section divider ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     CAPA
+═══════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-logo">💳</div>
+  <h1>Finance<br>Planner</h1>
+  <p class="subtitle">Guia completo do utilizador</p>
+  <div class="meta">
+    Versão 1.0 &nbsp;·&nbsp; Maio de 2026 &nbsp;·&nbsp; Uso pessoal
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ═══════════════════════════════════════
+     ÍNDICE
+═══════════════════════════════════════ -->
+<div class="toc">
+  <h2>Índice</h2>
+  <ol>
+    <li class="toc-section">Introdução ao Finance Planner</li>
+    <li class="toc-section">Primeiro acesso e configuração
+      <span class="toc-sub">— Login, workspace e onboarding</span>
+    </li>
+    <li class="toc-section">Dashboard
+      <span class="toc-sub">— Visão geral, KPIs e gráficos</span>
+    </li>
+    <li class="toc-section">Transações
+      <span class="toc-sub">— Lançamentos, parcelamentos e recorrências</span>
+    </li>
+    <li class="toc-section">Contas
+      <span class="toc-sub">— Contas bancárias e transferências</span>
+    </li>
+    <li class="toc-section">Categorias
+      <span class="toc-sub">— Organização de receitas, despesas e investimentos</span>
+    </li>
+    <li class="toc-section">Assinaturas
+      <span class="toc-sub">— Controlo de serviços recorrentes</span>
+    </li>
+    <li class="toc-section">Orçamentos
+      <span class="toc-sub">— Planeamento mensal por categoria</span>
+    </li>
+    <li class="toc-section">Metas Financeiras
+      <span class="toc-sub">— Objetivos e acompanhamento de progresso</span>
+    </li>
+    <li class="toc-section">Relatórios
+      <span class="toc-sub">— Análise mensal e exportação</span>
+    </li>
+    <li class="toc-section">Importação CSV
+      <span class="toc-sub">— Trazer histórico de outros apps ou bancos</span>
+    </li>
+    <li class="toc-section">Configurações
+      <span class="toc-sub">— Perfil, workspace, notificações e exportação</span>
+    </li>
+    <li class="toc-section">Dicas e boas práticas</li>
+  </ol>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     1. INTRODUÇÃO
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 1</div>
+<h2>Introdução ao Finance Planner</h2>
+<p class="lead">
+  O Finance Planner é um planner financeiro pessoal que centraliza receitas, despesas,
+  investimentos, assinaturas, metas e orçamentos num único lugar — acessível em
+  qualquer dispositivo com browser.
+</p>
+
+<p>
+  Cada conta tem o seu espaço isolado: os teus dados são privados e não são
+  partilhados com ninguém. O acesso é feito exclusivamente com a tua conta Google
+  autorizada.
+</p>
+
+<div class="feature-grid">
+  <div class="feature-card no-break">
+    <div class="icon">📊</div>
+    <strong>Dashboard em tempo real</strong>
+    <p>KPIs do mês, gráficos de evolução e diagnóstico automático das finanças.</p>
+  </div>
+  <div class="feature-card no-break">
+    <div class="icon">💸</div>
+    <strong>Controlo total de lançamentos</strong>
+    <p>Regista receitas, despesas e investimentos com parcelamentos e recorrências.</p>
+  </div>
+  <div class="feature-card no-break">
+    <div class="icon">🎯</div>
+    <strong>Metas e orçamentos</strong>
+    <p>Define limites mensais por categoria e objetivos financeiros com prazo.</p>
+  </div>
+  <div class="feature-card no-break">
+    <div class="icon">🔔</div>
+    <strong>Alertas push</strong>
+    <p>Recebe notificações de assinaturas a vencer, orçamentos estourados e metas atrasadas.</p>
+  </div>
+  <div class="feature-card no-break">
+    <div class="icon">📱</div>
+    <strong>PWA — funciona como app</strong>
+    <p>Instala no telemóvel ou desktop para acesso rápido, mesmo sem internet.</p>
+  </div>
+  <div class="feature-card no-break">
+    <div class="icon">📥</div>
+    <strong>Importação de histórico</strong>
+    <p>Importa extratos em CSV de qualquer banco para começar com dados históricos.</p>
+  </div>
+</div>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     2. PRIMEIRO ACESSO
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 2</div>
+<h2>Primeiro acesso e configuração</h2>
+<p class="lead">
+  O acesso ao Finance Planner é restrito a contas autorizadas. O login é feito
+  exclusivamente com o Google.
+</p>
+
+<h3>Como entrar</h3>
+
+<div class="steps">
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Acede ao site</strong>
+      <p>Vai a <em>adamfinancas.vercel.app</em> em qualquer browser.</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Clica em "Entrar com Google"</strong>
+      <p>O Google vai mostrar o seletor de contas. Seleciona a conta autorizada.</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Onboarding — cria o teu workspace</strong>
+      <p>Na primeira vez, define o nome do teu espaço financeiro (ex.: "Minhas finanças"). Só é pedido uma vez.</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Começa a usar</strong>
+      <p>O Dashboard aparece com o resumo do mês e categorias pré-criadas prontas a usar.</p>
+    </div>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Acesso restrito:</strong> Apenas emails autorizados pelo administrador conseguem entrar.
+  Se tentares com uma conta não autorizada, verás a página de acesso negado.
+</div>
+
+<h3>Instalar como app (PWA)</h3>
+<p>
+  O Finance Planner funciona como uma Progressive Web App — podes instalá-lo no
+  telemóvel ou computador para ter acesso direto sem abrir o browser.
+</p>
+
+<ul>
+  <li><strong>Android / Chrome:</strong> Toca nos três pontos → "Adicionar ao ecrã inicial"</li>
+  <li><strong>iOS / Safari:</strong> Toca em Partilhar → "Adicionar ao ecrã de início"</li>
+  <li><strong>Desktop / Chrome:</strong> Clica no ícone de instalação na barra de endereço</li>
+</ul>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     3. DASHBOARD
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 3</div>
+<div class="section-header">
+  <div class="section-icon">📊</div>
+  <h2>Dashboard</h2>
+</div>
+<p class="lead">
+  O Dashboard é a página principal — mostra um resumo executivo do mês selecionado
+  com os dados já lançados e projeções até ao fim do mês.
+</p>
+
+<h3>Seletor de mês</h3>
+<p>
+  No topo da página existe um seletor de mês com as setas <strong>‹</strong> e <strong>›</strong>.
+  Usa-o para navegar entre meses e ver o histórico de qualquer período.
+</p>
+
+<h3>Cartões de indicadores (KPIs)</h3>
+<p>A primeira linha mostra os indicadores principais do mês:</p>
+
+<table>
+  <tr>
+    <th>Indicador</th>
+    <th>O que representa</th>
+  </tr>
+  <tr>
+    <td><strong>Renda do mês</strong></td>
+    <td>Total de receitas já pagas / recebidas no mês</td>
+  </tr>
+  <tr>
+    <td><strong>Despesas</strong></td>
+    <td>Total de despesas pagas no mês</td>
+  </tr>
+  <tr>
+    <td><strong>Saldo</strong></td>
+    <td>Receitas menos despesas pagas (resultado real do mês)</td>
+  </tr>
+  <tr>
+    <td><strong>Taxa de poupança</strong></td>
+    <td>Percentagem da renda que foi poupada ou investida</td>
+  </tr>
+  <tr>
+    <td><strong>Projeção</strong></td>
+    <td>Estimativa de despesas até ao fim do mês com base nas pendentes</td>
+  </tr>
+  <tr>
+    <td><strong>Investimentos</strong></td>
+    <td>Total de aportes em investimentos no mês</td>
+  </tr>
+  <tr>
+    <td><strong>Assinaturas</strong></td>
+    <td>Custo mensal total das assinaturas ativas</td>
+  </tr>
+  <tr>
+    <td><strong>Metas ativas</strong></td>
+    <td>Número de objetivos financeiros em curso</td>
+  </tr>
+  <tr>
+    <td><strong>Restante em metas</strong></td>
+    <td>Quanto falta poupar para atingir as metas ativas</td>
+  </tr>
+  <tr>
+    <td><strong>Maior categoria</strong></td>
+    <td>A categoria de despesa com maior gasto no mês</td>
+  </tr>
+</table>
+
+<h3>Diagnóstico do mês</h3>
+<p>
+  O painel de diagnóstico analisa automaticamente as tuas finanças e gera
+  <strong>insights determinísticos</strong> como:
+</p>
+<ul>
+  <li>Tendência da taxa de poupança (subindo, descendo ou estável)</li>
+  <li>Categorias com gastos acima do orçamento</li>
+  <li>Meses consecutivos com saldo positivo ou negativo</li>
+  <li>Comparação com a média dos últimos meses</li>
+</ul>
+
+<h3>Gráficos</h3>
+<ul>
+  <li><strong>Evolução mensal:</strong> linha de receitas vs despesas dos últimos meses</li>
+  <li><strong>Distribuição por categoria:</strong> gráfico de barras com os maiores gastos</li>
+  <li><strong>Transações do mês:</strong> lista das maiores transações individuais</li>
+  <li><strong>Alertas:</strong> orçamentos ultrapassados e assinaturas a vencer em breve</li>
+</ul>
+
+<div class="tip">
+  <strong>Dica:</strong> O Dashboard mostra apenas transações com status <em>Pago</em>.
+  Transações pendentes aparecem nas projeções mas não contam para o saldo real.
+</div>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     4. TRANSAÇÕES
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 4</div>
+<div class="section-header">
+  <div class="section-icon">💸</div>
+  <h2>Transações</h2>
+</div>
+<p class="lead">
+  O coração do planner. Aqui registas todos os movimentos financeiros — receitas,
+  despesas e investimentos — e podes acompanhar o que está pago e o que está pendente.
+</p>
+
+<h3>Tipos de transação</h3>
+
+<table>
+  <tr>
+    <th>Tipo</th>
+    <th>Quando usar</th>
+    <th>Exemplo</th>
+  </tr>
+  <tr>
+    <td><span class="badge badge-green">Receita</span></td>
+    <td>Entradas de dinheiro</td>
+    <td>Salário, freelance, reembolso</td>
+  </tr>
+  <tr>
+    <td><span class="badge badge-orange">Despesa</span></td>
+    <td>Saídas de dinheiro</td>
+    <td>Supermercado, renda, gasolina</td>
+  </tr>
+  <tr>
+    <td><span class="badge badge-purple">Investimento</span></td>
+    <td>Aportes em ativos</td>
+    <td>Ações, fundos, poupança, cripto</td>
+  </tr>
+</table>
+
+<h3>Status de uma transação</h3>
+
+<table>
+  <tr>
+    <th>Status</th>
+    <th>Significado</th>
+  </tr>
+  <tr>
+    <td><span class="badge badge-orange">Pendente</span></td>
+    <td>Ainda não aconteceu ou não foi confirmada</td>
+  </tr>
+  <tr>
+    <td><span class="badge badge-green">Pago</span></td>
+    <td>Confirmada e já executada — conta para o saldo real</td>
+  </tr>
+  <tr>
+    <td><span class="badge" style="background:#f1f5f9;color:#475569">Cancelada</span></td>
+    <td>Anulada — ignorada em todos os cálculos</td>
+  </tr>
+</table>
+
+<h3>Criar uma transação</h3>
+
+<div class="steps">
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Clica em "Nova transação"</strong>
+      <p>Botão no canto superior direito do Dashboard ou da página Transações.</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Preenche os campos</strong>
+      <p>Descrição, valor, data, tipo (receita/despesa/investimento), categoria e conta.</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Escolhe o status</strong>
+      <p>Se já aconteceu, seleciona "Pago". Se é uma despesa futura, deixa "Pendente".</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Guarda</strong>
+      <p>A transação aparece na lista e os KPIs do Dashboard atualizam automaticamente.</p>
+    </div>
+  </div>
+</div>
+
+<h3>Parcelamentos</h3>
+<p>
+  Para compras parceladas, ativa a opção <strong>"Parcelado"</strong> ao criar a transação
+  e define o número de parcelas. O sistema cria automaticamente todas as parcelas com as
+  datas corretas.
+</p>
+
+<div class="callout">
+  <strong>Cancelar parcelas:</strong> Ao cancelar uma transação parcelada, podes escolher
+  cancelar apenas aquela parcela, esta e as seguintes, ou todas as parcelas do grupo.
+</div>
+
+<h3>Recorrências</h3>
+<p>
+  Para despesas que se repetem (ex.: ginásio, renda), ativa <strong>"Recorrente"</strong>
+  e define a frequência (semanal, mensal, anual). O sistema gera os próximos lançamentos
+  automaticamente.
+</p>
+
+<h3>Ações sobre transações</h3>
+<ul>
+  <li><strong>Editar:</strong> altera qualquer campo de uma transação existente</li>
+  <li><strong>Duplicar:</strong> cria uma cópia com a data de hoje (útil para lançamentos similares)</li>
+  <li><strong>Cancelar:</strong> anula a transação sem a apagar</li>
+  <li><strong>Marcar como pago:</strong> confirma transações pendentes</li>
+</ul>
+
+<h3>Filtros e pesquisa</h3>
+<p>
+  Na página Transações podes filtrar por tipo, status, categoria, conta ou período,
+  e pesquisar por descrição. Os filtros aplicam-se ao mês selecionado no topo.
+</p>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     5. CONTAS
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 5</div>
+<div class="section-header">
+  <div class="section-icon">🏦</div>
+  <h2>Contas</h2>
+</div>
+<p class="lead">
+  Representa os locais onde o teu dinheiro está guardado: conta à ordem, poupança,
+  cartão de crédito, carteira digital, etc.
+</p>
+
+<h3>Tipos de conta</h3>
+
+<table>
+  <tr>
+    <th>Tipo</th>
+    <th>Uso típico</th>
+  </tr>
+  <tr>
+    <td>Conta à ordem (Checking)</td>
+    <td>Conta bancária do dia-a-dia</td>
+  </tr>
+  <tr>
+    <td>Poupança (Savings)</td>
+    <td>Conta de poupança ou fundo de emergência</td>
+  </tr>
+  <tr>
+    <td>Cartão de crédito</td>
+    <td>Fatura do cartão de crédito</td>
+  </tr>
+  <tr>
+    <td>Investimentos</td>
+    <td>Corretora, fundo, carteira de cripto</td>
+  </tr>
+  <tr>
+    <td>Dinheiro</td>
+    <td>Carteira física / dinheiro em espécie</td>
+  </tr>
+</table>
+
+<h3>Saldo inicial</h3>
+<p>
+  Ao criar uma conta, podes definir um <strong>saldo inicial</strong> para refletir
+  o saldo atual real dessa conta. O saldo é atualizado automaticamente conforme
+  lanças transações associadas à conta.
+</p>
+
+<h3>Transferências entre contas</h3>
+<p>
+  Para mover dinheiro entre as tuas contas (ex.: da conta à ordem para poupança),
+  usa a opção <strong>Transferência</strong> na secção Contas ou ao criar uma transação.
+  O sistema regista automaticamente a saída numa conta e a entrada na outra.
+</p>
+
+<div class="tip">
+  <strong>Dica:</strong> Podes desfazer uma transferência recente caso tenha sido
+  lançada por engano — aparece a opção "Desfazer" momentaneamente após a criação.
+</div>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     6. CATEGORIAS
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 6</div>
+<div class="section-header">
+  <div class="section-icon">🏷️</div>
+  <h2>Categorias</h2>
+</div>
+<p class="lead">
+  As categorias organizam as transações e permitem analisar para onde vai o teu dinheiro.
+  Existem categorias de receita, despesa e investimento.
+</p>
+
+<h3>Categorias padrão</h3>
+<p>
+  Ao criar o teu workspace, o sistema cria automaticamente um conjunto de categorias
+  típicas prontas a usar:
+</p>
+
+<div class="feature-grid">
+  <div class="feature-card no-break">
+    <div class="icon">📗</div>
+    <strong>Receitas</strong>
+    <p>Salário, Freelance, Reembolso, Rendimentos, Outros</p>
+  </div>
+  <div class="feature-card no-break">
+    <div class="icon">📕</div>
+    <strong>Despesas</strong>
+    <p>Moradia, Alimentação, Transporte, Saúde, Educação, Lazer, Compras, Viagem, Impostos…</p>
+  </div>
+  <div class="feature-card no-break">
+    <div class="icon">📘</div>
+    <strong>Investimentos</strong>
+    <p>Renda fixa, Renda variável, Cripto, Previdência, Outros</p>
+  </div>
+  <div class="feature-card no-break">
+    <div class="icon">✏️</div>
+    <strong>Personalizável</strong>
+    <p>Cria, edita e elimina categorias conforme a tua realidade financeira.</p>
+  </div>
+</div>
+
+<h3>Criar uma categoria personalizada</h3>
+<p>
+  Clica em <strong>"Nova categoria"</strong>, define o nome, o tipo (receita / despesa / investimento),
+  escolhe uma cor e um ícone representativo. A categoria fica disponível imediatamente
+  para usar nas transações.
+</p>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     7. ASSINATURAS
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 7</div>
+<div class="section-header">
+  <div class="section-icon">🔄</div>
+  <h2>Assinaturas</h2>
+</div>
+<p class="lead">
+  Centraliza todos os serviços com cobrança periódica — streaming, SaaS,
+  seguros, ginásio — e vê exatamente quanto gastas por mês em subscrições.
+</p>
+
+<h3>O que podes fazer</h3>
+<ul>
+  <li><strong>Registar assinaturas</strong> com nome, valor, periodicidade e data de início</li>
+  <li>Ver o <strong>total mensal ativo</strong> (soma de todas as assinaturas em vigor)</li>
+  <li>Ver as <strong>próximas cobranças</strong> ordenadas por data</li>
+  <li><strong>Pausar ou cancelar</strong> assinaturas quando deixam de estar ativas</li>
+</ul>
+
+<h3>Geração automática de transações</h3>
+<p>
+  Uma assinatura ativa gera automaticamente a transação de despesa correspondente
+  na data de cobrança configurada. Não precisas lançar manualmente todos os meses.
+</p>
+
+<h3>Alerta de vencimento</h3>
+<p>
+  Se tiveres as notificações push ativas (ver Capítulo 12), recebes um aviso
+  antecipado antes de cada cobrança, com a antecedência que definires nas
+  Configurações (padrão: 7 dias).
+</p>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     8. ORÇAMENTOS
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 8</div>
+<div class="section-header">
+  <div class="section-icon">📋</div>
+  <h2>Orçamentos</h2>
+</div>
+<p class="lead">
+  Os orçamentos permitem definir limites de gasto por categoria para cada mês,
+  e acompanhar em tempo real quanto já foi gasto face ao planeado.
+</p>
+
+<h3>Como funciona</h3>
+<p>
+  Para cada mês, podes criar um orçamento por categoria de despesa. O sistema
+  compara automaticamente o valor planeado com o que foi efetivamente gasto
+  (transações pagas desse mês nessa categoria) e mostra a percentagem consumida.
+</p>
+
+<table>
+  <tr>
+    <th>Estado</th>
+    <th>Significado</th>
+  </tr>
+  <tr>
+    <td>🟢 Dentro do limite</td>
+    <td>Os gastos estão abaixo do valor orçamentado</td>
+  </tr>
+  <tr>
+    <td>🟡 Próximo do limite</td>
+    <td>Já gastaste mais de 80% do orçamento da categoria</td>
+  </tr>
+  <tr>
+    <td>🔴 Estourado</td>
+    <td>O gasto ultrapassou o valor planeado</td>
+  </tr>
+</table>
+
+<h3>Copiar orçamento do mês anterior</h3>
+<p>
+  No início de cada mês, podes copiar os orçamentos do mês anterior com um clique,
+  em vez de os definir todos de novo. É útil quando o planeamento mensal é similar.
+</p>
+
+<div class="callout">
+  <strong>Alerta automático:</strong> Se tiveres notificações push ativas, recebes
+  um aviso quando um orçamento é ultrapassado.
+</div>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     9. METAS
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 9</div>
+<div class="section-header">
+  <div class="section-icon">🎯</div>
+  <h2>Metas Financeiras</h2>
+</div>
+<p class="lead">
+  Define objetivos financeiros com valor alvo e prazo, e acompanha o progresso
+  mês a mês. Ideal para viagens, fundo de emergência, entrada de casa, etc.
+</p>
+
+<h3>Criar uma meta</h3>
+
+<div class="steps">
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Nome e descrição</strong>
+      <p>Ex.: "Fundo de emergência", "Férias na Tailândia", "Entrada do apartamento".</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Valor alvo e prazo</strong>
+      <p>Quanto queres acumular e até quando (data limite).</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Valor atual</strong>
+      <p>Quanto já tens guardado para esta meta neste momento.</p>
+    </div>
+  </div>
+</div>
+
+<h3>O que o sistema calcula automaticamente</h3>
+<ul>
+  <li><strong>Progresso (%):</strong> quanto já foi poupado do total</li>
+  <li><strong>Contribuição mensal necessária:</strong> quanto poupar por mês para atingir a meta no prazo</li>
+  <li><strong>Meses restantes:</strong> tempo disponível até ao prazo</li>
+  <li><strong>Estado:</strong> no prazo, em risco ou atrasada</li>
+</ul>
+
+<div class="warn">
+  <strong>Atenção:</strong> Se uma meta passar o prazo sem ser concluída, aparece como
+  "Atrasada" no Dashboard e recebes uma notificação push (se ativa).
+</div>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     10. RELATÓRIOS
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 10</div>
+<div class="section-header">
+  <div class="section-icon">📈</div>
+  <h2>Relatórios</h2>
+</div>
+<p class="lead">
+  Análise detalhada mês a mês: comparação com o período anterior, evolução das
+  categorias e exportação de dados.
+</p>
+
+<h3>O que encontras nos Relatórios</h3>
+<ul>
+  <li><strong>Comparação com o mês anterior:</strong> vê quanto variou cada categoria</li>
+  <li><strong>Evolução histórica:</strong> gráficos de receitas e despesas ao longo do tempo</li>
+  <li><strong>Distribuição por categoria:</strong> onde é que o dinheiro vai parar</li>
+  <li><strong>Taxa de poupança histórica:</strong> evolução do comportamento financeiro</li>
+</ul>
+
+<h3>Exportação CSV</h3>
+<p>
+  Podes exportar as transações de qualquer mês em formato CSV para Excel, Google Sheets
+  ou outro software financeiro. O ficheiro inclui data, descrição, valor, tipo,
+  categoria e conta.
+</p>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     11. IMPORTAÇÃO CSV
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 11</div>
+<div class="section-header">
+  <div class="section-icon">📥</div>
+  <h2>Importação CSV</h2>
+</div>
+<p class="lead">
+  Traz o histórico do teu banco, de outro app ou de uma folha de cálculo para o
+  Finance Planner em poucos passos, sem introduzir tudo manualmente.
+</p>
+
+<h3>Como importar</h3>
+
+<div class="steps">
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Exporta o extrato do teu banco em CSV</strong>
+      <p>A maioria dos bancos online permite exportar os movimentos em CSV ou Excel.</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Faz o upload do ficheiro</strong>
+      <p>Na secção Importação, arrasta o ficheiro ou usa o seletor.</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Mapeia as colunas</strong>
+      <p>Indica quais colunas do CSV correspondem a data, descrição, valor e tipo.</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Valida e confirma</strong>
+      <p>Vê o preview das transações a importar. Podes corrigir erros antes de confirmar.</p>
+    </div>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Histórico de importações:</strong> Cada importação fica registada com data
+  e número de linhas processadas, para poderes acompanhar o que já foi trazido.
+</div>
+
+<div class="tip">
+  <strong>Dica:</strong> Se o CSV tiver colunas diferentes do esperado, o sistema
+  ajuda-te a fazer o mapeamento manualmente. Guarda uma cópia do CSV original antes
+  de importar.
+</div>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     12. CONFIGURAÇÕES
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 12</div>
+<div class="section-header">
+  <div class="section-icon">⚙️</div>
+  <h2>Configurações</h2>
+</div>
+<p class="lead">
+  Personaliza o teu perfil, workspace e preferências de notificações.
+</p>
+
+<h3>Perfil</h3>
+<p>
+  Altera o teu nome de exibição e o URL do avatar. O email é o da conta Google
+  e não pode ser alterado aqui.
+</p>
+
+<h3>Workspace</h3>
+<p>
+  O workspace é o teu espaço financeiro isolado. Podes alterar o nome e a
+  <strong>moeda padrão</strong> (ex.: BRL, EUR, USD). A moeda afeta como os valores
+  são apresentados em toda a app.
+</p>
+
+<h3>Notificações push</h3>
+<p>
+  As notificações push enviam alertas diretamente para o teu dispositivo, mesmo
+  com o browser fechado. Para ativar:
+</p>
+
+<div class="steps">
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Vai a Configurações → Notificações push</strong>
+      <p>Cada dispositivo precisa de ser ativado individualmente.</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Clica em "Ativar notificações"</strong>
+      <p>O browser vai pedir permissão — clica em Permitir.</p>
+    </div>
+  </div>
+  <div class="step no-break">
+    <div class="step-num"></div>
+    <div class="step-body">
+      <strong>Configura os alertas</strong>
+      <p>Liga/desliga individualmente: assinaturas a vencer, metas atrasadas, orçamentos estourados.</p>
+    </div>
+  </div>
+</div>
+
+<table>
+  <tr>
+    <th>Alerta</th>
+    <th>Quando é enviado</th>
+    <th>Configurável</th>
+  </tr>
+  <tr>
+    <td>Assinaturas a vencer</td>
+    <td>X dias antes da data de cobrança (padrão: 7 dias)</td>
+    <td>Sim — podes mudar os dias de antecedência</td>
+  </tr>
+  <tr>
+    <td>Metas atrasadas</td>
+    <td>Quando uma meta ultrapassa o prazo sem ser concluída</td>
+    <td>Sim — liga/desliga</td>
+  </tr>
+  <tr>
+    <td>Orçamentos estourados</td>
+    <td>Quando os gastos de uma categoria ultrapassam o orçamento</td>
+    <td>Sim — liga/desliga</td>
+  </tr>
+</table>
+
+<div class="tip">
+  <strong>Frequência:</strong> Os alertas são enviados semanalmente (domingo de manhã).
+  Não recebes uma notificação por cada transação individual.
+</div>
+
+<h3>Exportação de dados</h3>
+<p>
+  Podes fazer um backup completo do teu workspace em formato JSON, incluindo
+  contas, categorias, transações, recorrências, assinaturas, orçamentos e metas.
+</p>
+
+<h3>Área de perigo — Apagar workspace</h3>
+<p>
+  Esta ação é <strong>irreversível</strong>. Apaga o workspace e todos os dados
+  associados permanentemente. Para confirmar, tens de escrever o nome exato do
+  workspace no campo de confirmação.
+</p>
+
+<div class="warn">
+  <strong>Atenção:</strong> Antes de apagar o workspace, faz uma exportação JSON
+  para ter uma cópia dos teus dados.
+</div>
+
+<hr>
+
+
+<!-- ═══════════════════════════════════════
+     13. DICAS E BOAS PRÁTICAS
+═══════════════════════════════════════ -->
+<div class="section-badge">Capítulo 13</div>
+<h2>Dicas e boas práticas</h2>
+
+<h3>Rotina mensal recomendada</h3>
+
+<table>
+  <tr>
+    <th>Quando</th>
+    <th>O que fazer</th>
+  </tr>
+  <tr>
+    <td>Início do mês</td>
+    <td>Copiar orçamentos do mês anterior, verificar metas e rever assinaturas ativas</td>
+  </tr>
+  <tr>
+    <td>Semanalmente</td>
+    <td>Lançar as transações da semana enquanto ainda as recordas</td>
+  </tr>
+  <tr>
+    <td>Fim do mês</td>
+    <td>Verificar o Dashboard, confirmar todas as pendentes, exportar relatório CSV se necessário</td>
+  </tr>
+</table>
+
+<h3>Como começar com histórico</h3>
+<p>
+  Se quiseres começar com dados históricos, usa a <strong>Importação CSV</strong>
+  para trazer os extratos dos últimos meses do teu banco. Assim o Dashboard e os
+  Relatórios vão mostrar a evolução real desde o início.
+</p>
+
+<h3>Usar status "Pendente" a teu favor</h3>
+<p>
+  Lança as despesas do mês assim que as planeas (mesmo antes de acontecerem) com
+  status <em>Pendente</em>. A <strong>Projeção</strong> no Dashboard vai mostrar
+  quanto falta gastar até ao fim do mês — ajuda a evitar gastos imprevistos.
+</p>
+
+<h3>Parcelamentos e recorrências</h3>
+<p>
+  Usa <strong>recorrências</strong> para despesas fixas mensais (água, luz, ginásio)
+  e <strong>parcelamentos</strong> para compras a prazo. Assim nunca te esqueces de
+  lançar nenhuma despesa prevista.
+</p>
+
+<h3>Instala como app no telemóvel</h3>
+<p>
+  Tendo o Finance Planner instalado como PWA no telemóvel, lançar uma transação
+  demora menos de 20 segundos — ideal para registar gastos no momento em que acontecem.
+</p>
+
+<h3>Tema claro / escuro</h3>
+<p>
+  O botão de alternância de tema fica no topo direito da app. Escolhe o tema que
+  preferires — a preferência é guardada automaticamente no teu dispositivo.
+</p>
+
+<div class="footer">
+  Finance Planner &nbsp;·&nbsp; Guia do Utilizador v1.0 &nbsp;·&nbsp; Maio 2026<br>
+  Documento confidencial para uso pessoal.
+</div>
+
+</div><!-- /page -->
+</body>
+</html>
