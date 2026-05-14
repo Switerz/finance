@@ -26,9 +26,13 @@ export async function GET(request: NextRequest) {
         } = await supabase.auth.getUser();
 
         if (!user?.email || !isEmailAllowlisted(user.email)) {
+          const deniedEmail = user?.email ?? "";
           await supabase.auth.signOut();
           return NextResponse.redirect(
-            new URL("/login?error=not_allowed", request.url)
+            new URL(
+              `/access-denied?email=${encodeURIComponent(deniedEmail)}`,
+              request.url
+            )
           );
         }
       }

@@ -1,6 +1,10 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import { getSupabasePublicEnv } from "@/lib/supabase/env";
+import {
+  getWorkspaceMemberAllowlist,
+  isEmailAllowlisted
+} from "@/lib/settings/allowlist";
 
 export async function updateSession(request: NextRequest) {
   const { supabaseUrl, supabaseKey } = getSupabasePublicEnv();
@@ -70,6 +74,18 @@ export async function updateSession(request: NextRequest) {
     redirectUrl.pathname = "/dashboard";
     redirectUrl.search = "";
     return NextResponse.redirect(redirectUrl);
+  }
+
+  // Block non-allowlisted users even if they have a valid session.
+  if (user && isPrivateRoute) {
+    const allowlist = getWorkspaceMemberAllowlist();
+    if (allowlist.length > 0 && user.email && !isEmailAllowlisted(user.email)) {
+      await supabase.auth.signOut();
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/access-denied";
+      redirectUrl.search = `?email=${encodeURIComponent(user.email)}`;
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   if (user && isPrivateRoute) {

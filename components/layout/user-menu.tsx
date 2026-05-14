@@ -24,7 +24,14 @@ export function UserMenu({ email, name }: UserMenuProps) {
     () => true,
     () => false
   );
+  const [isPending, startTransition] = React.useTransition();
   const label = name || email || "Usuário";
+
+  function handleSignOut() {
+    startTransition(async () => {
+      await signOut();
+    });
+  }
 
   if (!isMounted) {
     return (
@@ -60,17 +67,14 @@ export function UserMenu({ email, name }: UserMenuProps) {
           ) : null}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <form action={signOut}>
-          <DropdownMenuItem asChild>
-            <button
-              type="submit"
-              className="flex w-full cursor-pointer items-center gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              Sair
-            </button>
-          </DropdownMenuItem>
-        </form>
+        <DropdownMenuItem
+          onClick={handleSignOut}
+          disabled={isPending}
+          className="cursor-pointer gap-2 text-destructive focus:text-destructive"
+        >
+          <LogOut className="h-4 w-4" />
+          {isPending ? "Saindo…" : "Sair"}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
